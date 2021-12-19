@@ -1,15 +1,14 @@
-# define led LED_BUILTIN
-const int pin1 = 1;
+#define ledPin 2;
 
 void setup() {
-  pinMode(led, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
  }
 
 void loop() {
-  digitalWrite(led, HIGH);
-  digitalWrite(pin1, HIGH);
-  delay(500);
-  digitalWrite(led, LOW);
-  digitalWrite(pin1, LOW);
-  delay(500);
+    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(ledPin, HIGH);
+    delay(500);
+    digitalWrite(LED_BUILTIN, LOW);
+    digitalWrite(ledPin, LOW);
+    delay(500);
 }
