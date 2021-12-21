@@ -2,5 +2,5 @@
 @echo off
 title my title
 echo hello world!
-pause
-timeout /t 3 /nobreak >nul
+echo Press any key to exit . . .
+timeout /t -1 >nul
