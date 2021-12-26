@@ -2,7 +2,8 @@
 University of Southampton Malaysia - FEEG2001 Systems Design and Computing
 Semester 1 Summative Design Assessment - The Arduino Dinosaur
 Arduino Sketch v0.6 - Group 14
-Last modified:  26 December 2021 (Sunday)
+Last modified: 26 December 2021 (Sunday)
+Forked from https://github.com/kaizer222/dino_design_2021
 */
 
 #include <Servo.h>
@@ -30,34 +31,33 @@ void setup() {
     Serial.println("DINOSAUR IS ALIVE");
     delay(1000);
     
-    //calibrate here before evey run
+    // calibrate here before every run
     for (int i; i<=5 ; i++){
       Serial.print("LDR TEST: ");
       Serial.println( i);
-      Serial.print( " AMBIENT LIGHT INTENSITY: ");
+      Serial.print("AMBIENT LIGHT INTENSITY: ");
       Serial.println(analogRead(ldrPin));
       delay(1000);
     }
 
     Serial.println("PLEASE CALIBRATE LDR BEFORE USE");
-    //Calibrate here before every run
+    // Calibrate here before every run
     ambientLight = 140;
     Serial.println("LET THE HUNT BEGIN!");
     delay(1000);
 }
 
-
 void loop() {
     calcDistance();
     distanceLed();
     buzz(1000, 40);
-    //HAND TRACKING
+    // HAND TRACKING
     if (distance <= 30 && distance != 0) {
         keepDistance(wheelServo, wheelServo_2, wheelPos, wheelPos_2, 15);
         } else if (distance > 200 && wheelServo.read() >= 180) {
           reset_wheel(wheelServo,wheelServo_2);
         } else if (distance < 1) {}  // suppress 0cm noise 
-    ldr();
+    ldr(30);
     Serial.print("LDR Value: ");
     Serial.println(analogRead(ldrPin));  // print LDR value for easier debugging
 }
@@ -88,8 +88,8 @@ void buzz(int freq, int dur) {
 }
 
 // Detect if object (hand) is present in mouth
-void ldr() {
-    if (analogRead(ldrPin) < ambientLight-30){
+void ldr(int threshold) {
+    if (analogRead(ldrPin) < ambientLight-threshold){
       Serial.println("HAND DETECTED");
       bite(legServo, 60, "LEG");
       bite(handServo, 60, "JAW");
@@ -109,7 +109,7 @@ void bite(Servo servoName, int end_val, char part_name[]){
 }
 
 // Maintain the preset distance with the object
-void keepDistance(Servo servoName, Servo servoName2,int& posServo, int& posServo_2, int increment) {
+void keepDistance(Servo servoName, Servo servoName2, int& posServo, int& posServo_2, int increment) {
     if (posServo > 0 && posServo < 180) {
         servoName.write(distance <= presetDistance ? posServo-=increment : posServo+=increment);
         servoName2.write(distance <= presetDistance ? posServo_2+=increment : posServo_2-=increment);
@@ -121,11 +121,11 @@ void keepDistance(Servo servoName, Servo servoName2,int& posServo, int& posServo
     Serial.println(posServo_2);
 }
 
-void reset_wheel(Servo servoName, Servo servoName_2){
+void reset_wheel(Servo servoName, Servo servoName_2) {
     Serial.println("RESETING WHEEL");
-    for (int i=servoName.read(); i<=90; i++){
-    servoName.write(i);
-    servoName_2.write(180-i);
-    delay(10);
-}
+    for (int i=servoName.read(); i<=90; i++) {
+        servoName.write(i);
+        servoName_2.write(180-i);
+        delay(10);
+    }
 }
