@@ -2,6 +2,10 @@
 #define trigPin 3
 #define speakerPin 9
 
+// this is a comment
+
+/* multiline comment */
+
 void setup() {
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
