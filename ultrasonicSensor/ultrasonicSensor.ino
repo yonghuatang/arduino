@@ -1,23 +1,17 @@
-#define echoPin 2
-#define trigPin 3
-#define speakerPin 9
-
-// this is a comment
-
-/* multiline comment */
+const int echoPin = 2, trigPin = 3, speakerPin = 9;
 
 void setup() {
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
     pinMode(speakerPin, OUTPUT);
     Serial.begin(9600);
-    Serial.println("Ultrasonic Sensor HC-SR04 Test");
+    Serial.println("Ultrasonic Sensor HC-SR04 and Piezoeletric Buzzer Test");
     delay(1000);
 }
 
 void loop() {
     digitalWrite(trigPin, LOW);
-    delayMicroseconds(2);
+    delayMicroseconds(2); // why??
     digitalWrite(trigPin, HIGH);
     delayMicroseconds(10);
     digitalWrite(trigPin, LOW);
