@@ -6,10 +6,10 @@ void setup() {
 
 void loop() {
     // simulate PMW
-    for (int i=0; i<=10; i++) {
+    for (int i=0; i<=5; i++) {
         for (int k=0; k<=100; k++) {
             digitalWrite(ledPin, HIGH);
-            delay(10-i);
+            delay(5-i);
             digitalWrite(ledPin, LOW);
             delay(i);
         }
