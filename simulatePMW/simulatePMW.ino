@@ -1,14 +1,16 @@
+const int ledPin = 2;
+
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(ledPin, OUTPUT);
 }
 
 void loop() {
     // simulate PMW
     for(int i=0; i<=10; i++){
         for(int k=0; k<=100; k++){
-            digitalWrite(LED_BUILTIN, HIGH);
+            digitalWrite(ledPin, HIGH);
             delay(10-i);
-            digitalWrite(LED_BUILTIN, LOW);
+            digitalWrite(ledPin, LOW);
             delay(i);
         }
     }
