@@ -53,13 +53,13 @@ void loop() {
     buzz(1000, 40);
     //HAND TRACKING
     if (distance <= 30 && distance != 0) {
-        keepDistance(wheelServo, wheelServo_2, &wheelPos,&wheelPos_2, 15);
+        keepDistance(wheelServo, wheelServo_2, wheelPos, wheelPos_2, 15);
         } else if (distance > 200 && wheelServo.read() >= 180) {
           reset_wheel(wheelServo,wheelServo_2);
         } else if (distance < 1) {}  // suppress 0cm noise 
     ldr();
     Serial.print("LDR Value: ");
-    Serial.println(analogRead(ldrPin)); // print LDR value for easier debugging
+    Serial.println(analogRead(ldrPin));  // print LDR value for easier debugging
 }
 
 // Calculate the distance using HC-SR04 ultrasonic sensor
