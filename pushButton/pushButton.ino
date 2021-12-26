@@ -11,5 +11,7 @@ void loop() {
     if (buttonState) {
         digitalWrite(LED_BUILTIN, HIGH);
     }
+    Serial.print("Button state: ");
+    Serial.println(buttonState);
     delay(100);
 }
