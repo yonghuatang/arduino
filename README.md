@@ -1,2 +1,2 @@
 # arduino
-A place to store my Arduino sketches
+A place to share and store my Arduino (mostly Uno) sketches.  
