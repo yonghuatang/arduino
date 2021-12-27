@@ -1,13 +1,12 @@
 /*
 University of Southampton Malaysia - FEEG2001 Systems Design and Computing
 Semester 1 Summative Design Assessment - The Arduino Dinosaur
-Arduino Sketch v0.6.1 - Group 14
+Arduino Sketch v0.6.2 - Group 14
 Last modified: 28 December 2021 (Tuesday)
 Forked from https://github.com/kaizer222/dino_design_2021
 */
 
 #include <Servo.h>
-using namespace std;  // ??
 
 const int ledPin=2, trigPin=3, echoPin=4, buzzerPin=5, ldrPin=A1;
 unsigned int ldrValue, ambientLight, distance, presetDistance=15, wheelPos=90, wheelPos_2=90;
@@ -25,7 +24,7 @@ void setup() {
     jawServo.attach(10);
     handServo.attach(11);
     legServo.attach(12);
-    reset_wheel(wheelServo, wheelServo_2);
+    resetWheel(wheelServo, wheelServo_2);
     jawServo.write(0);
     handServo.write(0);
     legServo.write(30);
@@ -44,7 +43,7 @@ void loop() {
     if (distance <= 30 && distance != 0) {
         keepDistance(wheelServo, wheelServo_2, (int&)wheelPos, (int&)wheelPos_2, 15);
     } else if (distance > 200 && wheelServo.read() >= 180) {
-          reset_wheel(wheelServo,wheelServo_2);
+          resetWheel(wheelServo,wheelServo_2);
     }
     ldr(30);
     Serial.print("LDR Value: ");
@@ -127,8 +126,8 @@ void keepDistance(Servo servoName, Servo servoName2, int& posServo, int& posServ
     Serial.println(posServo_2);
 }
 
-void reset_wheel(Servo servoName, Servo servoName_2) {
-    Serial.println("RESETING WHEEL...");
+void resetWheel(Servo servoName, Servo servoName_2) {
+    Serial.println("RESETTING WHEEL...");
     for (int i=servoName.read(); i<=90; i++) {
         servoName.write(i);
         servoName_2.write(180-i);
