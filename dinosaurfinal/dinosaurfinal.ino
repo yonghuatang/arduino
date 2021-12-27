@@ -1,12 +1,13 @@
 /*
 University of Southampton Malaysia - FEEG2001 Systems Design and Computing
 Semester 1 Summative Design Assessment - The Arduino Dinosaur
-Arduino Sketch v0.6 - Group 14
-Last modified: 26 December 2021 (Sunday)
+Arduino Sketch v0.6.1 - Group 14
+Last modified: 28 December 2021 (Tuesday)
 Forked from https://github.com/kaizer222/dino_design_2021
 */
 
 #include <Servo.h>
+using namespace std;  // ??
 
 const int ledPin=2, trigPin=3, echoPin=4, buzzerPin=5, ldrPin=A1;
 unsigned int ldrValue, ambientLight, distance, presetDistance=15, wheelPos=90, wheelPos_2=90;
@@ -30,19 +31,7 @@ void setup() {
     legServo.write(30);
     Serial.println("DINOSAUR IS ALIVE");
     delay(1000);
-    
-    // calibrate here before every run
-    for (int i; i<=5 ; i++){
-      Serial.print("LDR TEST: ");
-      Serial.println( i);
-      Serial.print("AMBIENT LIGHT INTENSITY: ");
-      Serial.println(analogRead(ldrPin));
-      delay(1000);
-    }
-
-    Serial.println("PLEASE CALIBRATE LDR BEFORE USE");
-    // Calibrate here before every run
-    ambientLight = 140;
+    calibrateLDR();
     Serial.println("LET THE HUNT BEGIN!");
     delay(1000);
 }
@@ -54,13 +43,28 @@ void loop() {
     // HAND TRACKING
     if (distance <= 30 && distance != 0) {
         keepDistance(wheelServo, wheelServo_2, wheelPos, wheelPos_2, 15);
-        } else if (distance > 200 && wheelServo.read() >= 180) {
+    } else if (distance > 200 && wheelServo.read() >= 180) {
           reset_wheel(wheelServo,wheelServo_2);
-        } else if (distance < 1) {}  // suppress 0cm noise 
+    }
     ldr(30);
     Serial.print("LDR Value: ");
     Serial.println(analogRead(ldrPin));  // print LDR value for easier debugging
 }
+
+// Calibrate LDR ambientLight value before every run
+void calibrateLDR(unsigned int& ambientLight) {
+    int sum = 0;
+    int val;
+    for (int i=1; i<=5 ; i++) {
+        val = analogRead(ldrPin);
+        sum += val;
+        Serial.print(std::format("AMBIENT LIGHT INTENSITY #{}: ", i));  // ??
+        Serial.println(val);
+        delay(1000);
+    }
+    ambientLight = (unsigned int)(sum/5);
+}
+
 
 // Calculate the distance using HC-SR04 ultrasonic sensor
 void calcDistance() {
@@ -88,7 +92,7 @@ void buzz(int freq, int dur) {
 }
 
 // Detect if object (hand) is present in mouth
-void ldr(int threshold) {
+void ldr(unsigned int threshold) {
     if (analogRead(ldrPin) < ambientLight-threshold){
       Serial.println("HAND DETECTED");
       bite(legServo, 60, "LEG");
@@ -97,7 +101,7 @@ void ldr(int threshold) {
       bite(legServo, 30, "LEG");
       bite(jawServo, 0, "JAW");
       bite(handServo, 0, "HAND");
-  }
+    }
 }
 
 // Jaw and hand servo movement if hand present between mouth
@@ -122,7 +126,7 @@ void keepDistance(Servo servoName, Servo servoName2, int& posServo, int& posServ
 }
 
 void reset_wheel(Servo servoName, Servo servoName_2) {
-    Serial.println("RESETING WHEEL");
+    Serial.println("RESETING WHEEL...");
     for (int i=servoName.read(); i<=90; i++) {
         servoName.write(i);
         servoName_2.write(180-i);
