@@ -31,7 +31,7 @@ void setup() {
     legServo.write(30);
     Serial.println("DINOSAUR IS ALIVE");
     delay(1000);
-    calibrateLDR();
+    calibrateLDR(ambientLight, 10);  // sample 10 LDR ambient readings
     Serial.println("LET THE HUNT BEGIN!");
     delay(1000);
 }
@@ -42,7 +42,7 @@ void loop() {
     buzz(1000, 40);
     // HAND TRACKING
     if (distance <= 30 && distance != 0) {
-        keepDistance(wheelServo, wheelServo_2, wheelPos, wheelPos_2, 15);
+        keepDistance(wheelServo, wheelServo_2, (int&)wheelPos, (int&)wheelPos_2, 15);
     } else if (distance > 200 && wheelServo.read() >= 180) {
           reset_wheel(wheelServo,wheelServo_2);
     }
@@ -52,17 +52,19 @@ void loop() {
 }
 
 // Calibrate LDR ambientLight value before every run
-void calibrateLDR(unsigned int& ambientLight) {
+void calibrateLDR(unsigned int& ambientLight, unsigned int numberOfTests) {
     int sum = 0;
     int val;
-    for (int i=1; i<=5 ; i++) {
+    char str[] = "AMBIENT LIGHT INTENSITY #@: ";
+    for (int i=1; i<=numberOfTests ; i++) {
         val = analogRead(ldrPin);
         sum += val;
-        Serial.print(std::format("AMBIENT LIGHT INTENSITY #{}: ", i));  // ??
+        str[25] = (char)i;
+        Serial.print(str);
         Serial.println(val);
-        delay(1000);
+        delay(500);
     }
-    ambientLight = (unsigned int)(sum/5);
+    ambientLight = (unsigned int)(sum/numberOfTests);
 }
 
 
@@ -93,14 +95,14 @@ void buzz(int freq, int dur) {
 
 // Detect if object (hand) is present in mouth
 void ldr(unsigned int threshold) {
-    if (analogRead(ldrPin) < ambientLight-threshold){
-      Serial.println("HAND DETECTED");
-      bite(legServo, 60, "LEG");
-      bite(handServo, 60, "JAW");
-      bite(jawServo, 60, "HAND");
-      bite(legServo, 30, "LEG");
-      bite(jawServo, 0, "JAW");
-      bite(handServo, 0, "HAND");
+    if (analogRead(ldrPin) < ambientLight-threshold) {
+        Serial.println("HAND DETECTED");
+        bite(legServo, 60, "LEG");
+        bite(handServo, 60, "JAW");
+        bite(jawServo, 60, "HAND");
+        bite(legServo, 30, "LEG");
+        bite(jawServo, 0, "JAW");
+        bite(handServo, 0, "HAND");
     }
 }
 
@@ -119,7 +121,7 @@ void keepDistance(Servo servoName, Servo servoName2, int& posServo, int& posServ
         servoName2.write(distance <= presetDistance ? posServo_2+=increment : posServo_2-=increment);
     } else if (posServo == 0 || posServo == 180) {
         servoName.write(distance <= presetDistance ? (posServo == 0 ? 0 : posServo-=increment) : (posServo == 180 ? 180 : posServo+=increment));
-        servoName2.write(distance <= presetDistance ? (posServo_2 == 180 ? 180 : posServo_2+=increment) : (*posServo_2 == 0 ? 0 : posServo_2-=increment));
+        servoName2.write(distance <= presetDistance ? (posServo_2 == 180 ? 180 : posServo_2+=increment) : (posServo_2 == 0 ? 0 : posServo_2-=increment));
     }
     Serial.println(posServo);
     Serial.println(posServo_2);
