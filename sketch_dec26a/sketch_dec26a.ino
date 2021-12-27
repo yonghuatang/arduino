@@ -1,7 +1,7 @@
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(9600);
-    delay(100);
+    while (!Serial) {;}
     Serial.println(__DATE__);
     Serial.println(__TIME__);
 }
