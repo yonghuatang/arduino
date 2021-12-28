@@ -40,7 +40,7 @@ void setup() {
     Serial.begin(9600);
     Serial.println();
 #if WAIT_TO_START
-    Serial.println("Type any character to start");
+    Serial.println("Type any character to start...");
     while (!Serial.available());
 #endif //WAIT_TO_START
     // initialize the SD card
@@ -48,46 +48,46 @@ void setup() {
     // make sure that the default chip select pin is set to
     // output, even if you don't use it:
     pinMode(10, OUTPUT);
-    // see if the card is present and can be initialized:
+    // see if the card is present and can be initialised:
     if (!SD.begin(chipSelect)) {
         error("Card failed, or not present");
     }
     Serial.println("card initialized.");
     // create a new file
     char filename[] = "LOGGER00.CSV";
-    for (uint8_t i = 0; i < 100; i++) {
-    filename[6] = i/10 + '0';
-    filename[7] = i%10 + '0';
-    if (! SD.exists(filename)) {
+    for (uint8_t i=0; i<100; i++) {
+        filename[6] = i/10 + '0';
+        filename[7] = i%10 + '0';
         // only open a new file if it doesn't exist
-        logfile = SD.open(filename, FILE_WRITE); 
-        break;  // leave the loop!
+        if (!SD.exists(filename)) {
+            logfile = SD.open(filename, FILE_WRITE); 
+            break;  // leave the loop!
+        }
     }
-}
   
-  if (! logfile) {
-    error("couldnt create file");
-  }
+    if (! logfile) {
+        error("Couldn't create file");
+    }
   
-  Serial.print("Logging to: ");
-  Serial.println(filename);
+    Serial.print("Logging to: ");
+    Serial.println(filename);
 
-  // connect to RTC
-  Wire.begin();  
-  if (!RTC.begin()) {
-    logfile.println("RTC failed");
+    // connect to RTC
+    Wire.begin();  
+    if (!RTC.begin()) {
+        logfile.println("RTC failed");
 #if ECHO_TO_SERIAL
-    Serial.println("RTC failed");
-#endif  //ECHO_TO_SERIAL
-  }
+        Serial.println("RTC failed");
+#endif
+    }
   
-  logfile.println("millis,unix_stamp,datetime,light");  
+    logfile.println("millis,unix_stamp,datetime,light");  
 #if ECHO_TO_SERIAL
-  Serial.println("millis,unix_stamp,datetime,light");
+    Serial.println("millis,unix_stamp,datetime,light");
 #endif //ECHO_TO_SERIAL
  
-  // If you want to set the aref to something other than 5v
-  //analogReference(EXTERNAL);
+    // If you want to set the aref to something other than 5V
+    //analogReference(EXTERNAL);
 }
 
 void loop() {
@@ -96,10 +96,10 @@ void loop() {
     delay((LOG_INTERVAL -1) - (millis() % LOG_INTERVAL));
     // log milliseconds since starting
     uint32_t m = millis();
-    logfile.print(m);           // milliseconds since start
+    logfile.print(m);         // milliseconds since start
     logfile.print(", ");    
 #if ECHO_TO_SERIAL
-    Serial.print(m);         // milliseconds since start
+    Serial.print(m);          // milliseconds since start
     Serial.print(", ");  
 #endif
     // fetch the time
@@ -107,55 +107,55 @@ void loop() {
     // log time
     logfile.print(now.unixtime()); // seconds since 1/1/1970
     logfile.print(", ");
-  logfile.print('"');
-  logfile.print(now.year(), DEC);
-  logfile.print("/");
-  logfile.print(now.month(), DEC);
-  logfile.print("/");
-  logfile.print(now.day(), DEC);
-  logfile.print(" ");
-  logfile.print(now.hour(), DEC);
-  logfile.print(":");
-  logfile.print(now.minute(), DEC);
-  logfile.print(":");
-  logfile.print(now.second(), DEC);
-  logfile.print('"');
+    logfile.print('"');
+    logfile.print(now.year(), DEC);
+    logfile.print("/");
+    logfile.print(now.month(), DEC);
+    logfile.print("/");
+    logfile.print(now.day(), DEC);
+    logfile.print(" ");
+    logfile.print(now.hour(), DEC);
+    logfile.print(":");
+    logfile.print(now.minute(), DEC);
+    logfile.print(":");
+    logfile.print(now.second(), DEC);
+    logfile.print('"');
 #if ECHO_TO_SERIAL
-  Serial.print(now.unixtime()); // seconds since 1/1/1970
-  Serial.print(", ");
-  Serial.print('"');
-  Serial.print(now.year(), DEC);
-  Serial.print("/");
-  Serial.print(now.month(), DEC);
-  Serial.print("/");
-  Serial.print(now.day(), DEC);
-  Serial.print(" ");
-  Serial.print(now.hour(), DEC);
-  Serial.print(":");
-  Serial.print(now.minute(), DEC);
-  Serial.print(":");
-  Serial.print(now.second(), DEC);
-  Serial.print('"');
+    Serial.print(now.unixtime()); // seconds since 1/1/1970
+    Serial.print(", ");
+    Serial.print('"');
+    Serial.print(now.year(), DEC);
+    Serial.print("/");
+    Serial.print(now.month(), DEC);
+    Serial.print("/");
+    Serial.print(now.day(), DEC);
+    Serial.print(" ");
+    Serial.print(now.hour(), DEC);
+    Serial.print(":");
+    Serial.print(now.minute(), DEC);
+    Serial.print(":");
+    Serial.print(now.second(), DEC);
+    Serial.print('"');
 #endif //ECHO_TO_SERIAL
 
-  analogRead(photocellPin);
-  delay(10); 
-  int photocellReading = analogRead(photocellPin);  
-  logfile.print(", ");    
-  logfile.print(photocellReading);
+    analogRead(photocellPin);
+    delay(10); 
+    int photocellReading = analogRead(photocellPin);  
+    logfile.print(", ");    
+    logfile.print(photocellReading);
 #if ECHO_TO_SERIAL
-  Serial.print(", ");   
-  Serial.print(photocellReading);
+    Serial.print(", ");   
+    Serial.print(photocellReading);
 #endif //ECHO_TO_SERIAL
 
-  logfile.println();
+    logfile.println();
 //#if ECHO_TO_SERIAL
-  Serial.println();
+    Serial.println();
 //#endif // ECHO_TO_SERIAL
 
   // Now we write data to disk! Don't sync too often - requires 2048 bytes of I/O to SD card
   // which uses a bunch of power and takes time
-  if ((millis() - syncTime) < SYNC_INTERVAL) return;
-  syncTime = millis();
-  logfile.flush();
+    if ((millis() - syncTime) < SYNC_INTERVAL) return;
+    syncTime = millis();
+    logfile.flush();
 }
