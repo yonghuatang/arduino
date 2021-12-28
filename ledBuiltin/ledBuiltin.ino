@@ -1,10 +1,16 @@
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
- }
+    Serial.begin(9600);
+    delay(500);
+    Serial.println(__DATE__);
+    Serial.println(__TIME__);
+}
 
 void loop() {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(500);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(500);
+    // put your main code here, to run repeatedly:
+    Serial.println("Hello world");
+    bool ledStatus = digitalRead(LED_BUILTIN);
+    Serial.println(ledStatus);
+    digitalWrite(LED_BUILTIN, !ledStatus);
+    delay(1000);
 }
