@@ -1,12 +1,14 @@
 /*
 University of Southampton Malaysia - FEEG2001 Systems Design and Computing
 Semester 1 Summative Design Assessment - The Arduino Dinosaur
-Arduino Sketch v0.6.2 - Group 14
+Arduino Sketch v0.6.3 - Group 14
 Last modified: 28 December 2021 (Tuesday)
 Forked from https://github.com/kaizer222/dino_design_2021
 */
 
 #include <Servo.h>
+
+#define makeStr(x) #x
 
 const int ledPin=2, trigPin=3, echoPin=4, buzzerPin=5, ldrPin=A1;
 unsigned int ldrValue, ambientLight, distance, presetDistance=15, wheelPos=90, wheelPos_2=90;
@@ -53,14 +55,11 @@ void loop() {
 // Calibrate LDR ambientLight value before every run
 void calibrateLDR(unsigned int& ambientLight, unsigned int numberOfTests) {
     int sum = 0;
-    int val;
-    char str[] = "AMBIENT LIGHT INTENSITY #@: ";
+    static int val;
     for (int i=1; i<=numberOfTests ; i++) {
         val = analogRead(ldrPin);
         sum += val;
-        str[25] = (char)i;
-        Serial.print(str);
-        Serial.println(val);
+        Serial.print("AMBIENT LIGHT INTENSITY #"); Serial.print(i); Serial.print(": "); Serial.println(val);
         delay(500);
     }
     ambientLight = (unsigned int)(sum/numberOfTests);
