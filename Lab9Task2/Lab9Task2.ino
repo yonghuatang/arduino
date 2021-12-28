@@ -1,8 +1,8 @@
-// GPS test code; based on Adafruit GPS test code
-// This code shows how to listen to the GPS module in an interrupt
-// which allows the microcontroller to do other tasks in the meantime
-// just parse when a new NMEA sentence is available! 
-// Then access data when desired
+/* GPS test code; based on Adafruit GPS test code
+This code shows how to listen to the GPS module in an interrupt
+which allows the microcontroller to do other tasks in the meantime
+just parse when a new NMEA sentence is available! 
+Then access data when desired */
 
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
