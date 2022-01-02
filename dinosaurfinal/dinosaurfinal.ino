@@ -1,21 +1,21 @@
 /*
 University of Southampton Malaysia - FEEG2001 Systems Design and Computing
 Semester 1 Summative Design Assessment - The Arduino Dinosaur
-Arduino Sketch v0.6.3 - Group 14
-Last modified: 28 December 2021 (Tuesday)
+Arduino Sketch v0.6.4 - Group 14
+Last modified: 02 January 2022 (Sunday)
 Forked from https://github.com/kaizer222/dino_design_2021
 */
 
 #include <Servo.h>
 
-#define makeStr(x) #x
-
 const int ledPin=2, trigPin=3, echoPin=4, buzzerPin=5, ldrPin=A1;
-unsigned int ldrValue, ambientLight, distance, presetDistance=15, wheelPos=90, wheelPos_2=90;
+unsigned int ldrValue, ambientLight, distance, presetDistance=15;
+int wheelPos=90, wheelPos_2=90;
 Servo wheelServo, wheelServo_2, jawServo, handServo, legServo;
 
 void setup() {
     Serial.begin(9600);
+    while (!Serial) {delay(100);}
     pinMode(ledPin, OUTPUT);
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
@@ -41,9 +41,8 @@ void loop() {
     calcDistance();
     distanceLed();
     buzz(1000, 40);
-    // HAND TRACKING
     if (distance <= 30 && distance != 0) {
-        keepDistance(wheelServo, wheelServo_2, (int&)wheelPos, (int&)wheelPos_2, 15);
+        keepDistance(wheelServo, wheelServo_2, wheelPos, wheelPos_2, 15);
     } else if (distance > 200 && wheelServo.read() >= 180) {
           resetWheel(wheelServo,wheelServo_2);
     }
@@ -55,14 +54,14 @@ void loop() {
 // Calibrate LDR ambientLight value before every run
 void calibrateLDR(unsigned int& ambientLight, unsigned int numberOfTests) {
     int sum = 0;
-    static int val;
+    int val;
     for (int i=1; i<=numberOfTests ; i++) {
         val = analogRead(ldrPin);
         sum += val;
         Serial.print("AMBIENT LIGHT INTENSITY #"); Serial.print(i); Serial.print(": "); Serial.println(val);
         delay(500);
     }
-    ambientLight = (unsigned int)(sum/numberOfTests);
+    ambientLight = sum / numberOfTests;
 }
 
 
