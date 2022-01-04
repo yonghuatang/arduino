@@ -6,6 +6,14 @@ Based on code written by Kevin Townsend for Adafruit Industries with some headin
 #include <Adafruit_Sensor.h>
 #include <Adafruit_HMC5883_U.h>
 
+// ============
+#define northLED 2
+#define eastLED 3
+#define southLED 4
+#define westLED 5
+#define defLED (defined northLED && defined eastLED && defined southLED && defined westLED)
+// ============
+
 /* Assign a unique ID to this sensor at the same time */
 Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 
@@ -26,8 +34,16 @@ void displaySensorDetails() {
 
 void setup() {
     Serial.begin(9600);
-    Serial.println("HMC5883 Magnetometer Test");
-    Serial.println();
+    delay(500);
+    
+#if defLED
+    pinMode(northLED, OUTPUT);
+    pinMode(eastLED, OUTPUT);
+    pinMode(southLED, OUTPUT);
+    pinMode(westLED, OUTPUT);
+#endif
+
+    Serial.println("HMC5883 Magnetometer Test"); Serial.println();
   
     /* Initialise the sensor */
     if (!mag.begin()) {
@@ -72,8 +88,30 @@ void loop() {
     }
    
     // Convert radians to degrees for readability.
-    float headingDegrees = heading * 180/M_PI; 
-  
+    float headingDegrees = heading * 180/M_PI;
     Serial.print("Heading (degrees): "); Serial.println(headingDegrees);
+    
+#if defLED
+    static char headingLetter;
+    digitalWrite(northLED, LOW);
+    digitalWrite(eastLED, LOW);
+    digitalWrite(southLED, LOW);
+    digitalWrite(westLED, LOW);
+    if (headingDegrees >= 0 && headingDegrees < 90) {
+        digitalWrite(northLED, HIGH);
+        headingLetter = 'N';
+    } else if (headingDegrees >= 90 && headingDegrees < 180) {
+        digitalWrite(eastLED, HIGH);
+        headingLetter = 'E';
+    } else if (headingDegrees >= 180 && headingDegrees < 270) {
+        digitalWrite(southLED, HIGH);
+        headingLetter = 'S';
+    } else if (headingDegrees >= 270 && headingDegrees < 360) {
+        digitalWrite(westLED, HIGH);
+        headingLetter = 'W';
+    }
+    Serial.print("Heading (direction): "); Serial.println(headingLetter);
+#endif   
+ 
     delay(2000);
 }
