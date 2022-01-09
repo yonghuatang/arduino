@@ -276,7 +276,7 @@ void loop() {
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
     } else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
         // wait for correct available data length, should be a VERY short wait
-        while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount() {;}
+        while (fifoCount < packetSize) {fifoCount = mpu.getFIFOCount();}
 
         // read a packet from FIFO
         mpu.getFIFOBytes(fifoBuffer, packetSize);

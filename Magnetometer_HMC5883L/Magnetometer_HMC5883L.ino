@@ -9,8 +9,8 @@ Based on code written by Kevin Townsend for Adafruit Industries with some headin
 // ============
 #define northLED 2
 #define eastLED 3
-#define southLED 4
-#define westLED 5
+#define southLED 6
+#define westLED 7
 #define defLED (defined northLED && defined eastLED && defined southLED && defined westLED)
 // ============
 
@@ -57,14 +57,14 @@ void setup() {
 }
 
 void loop() {
-    /* Get a new sensor event */ 
+    /* Get a new sensor event */
     sensors_event_t event; 
     mag.getEvent(&event);
- 
+    
     /* Display the results (magnetic vector values are in micro-Tesla (uT)) */
     Serial.print("X: "); Serial.print(event.magnetic.x); Serial.print("  ");
     Serial.print("Y: "); Serial.print(event.magnetic.y); Serial.print("  ");
-    Serial.print("Z: "); Serial.print(event.magnetic.z); Serial.print("  ");Serial.println("uT");
+    Serial.print("Z: "); Serial.print(event.magnetic.z); Serial.print("  "); Serial.println("uT");
 
     // Hold the module so that Z is pointing 'up' and you can measure the heading with x&y
     // Calculate heading when the magnetometer is level, then correct for signs of axis.
@@ -74,7 +74,7 @@ void loop() {
     // i.e. the deviation of the magnetic north from the geographic north at your location.
     // For Halifax, Nova Scotia (in Canada), this is: -17° 44' W, which is ~-0.22 radians
   
-    float declinationAngle = 0.31;  // radians
+    float declinationAngle = 0.00157;  // in radians
     heading += declinationAngle;  // add to heading to correct if declination is negative
   
     // Correct for when signs are reversed.
@@ -88,7 +88,7 @@ void loop() {
     }
    
     // Convert radians to degrees for readability.
-    float headingDegrees = heading * 180/M_PI;
+    int headingDegrees = (int)(heading*180/M_PI);
     Serial.print("Heading (degrees): "); Serial.println(headingDegrees);
     
 #if defLED
@@ -111,7 +111,7 @@ void loop() {
         headingLetter = 'W';
     }
     Serial.print("Heading (direction): "); Serial.println(headingLetter);
-#endif   
+#endif
  
-    delay(2000);
+    delay(1000);
 }
