@@ -4,6 +4,14 @@ void setup() {
     delay(500);
     Serial.println(__DATE__);
     Serial.println(__TIME__);
+    
+    Serial.println("Please input your name: ");
+    String s;
+    while (Serial.available() == 0) {}
+    s = Serial.readString();
+    Serial.print("Welcome back! ");
+    Serial.println(s);
+    
 }
 
 void loop() {

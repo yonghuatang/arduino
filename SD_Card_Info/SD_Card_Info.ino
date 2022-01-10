@@ -33,7 +33,7 @@ const int chipSelect = 10;
 
 void setup() {
     Serial.begin(9600);
-    while (!Serial) {;}
+    delay(500);
     Serial.print("\nInitializing SD card...");
     /* On the Ethernet Shield, CS is pin 4. It's set as an output by default.
     Note that even if it's not used as the CS pin, the hardware SS pin 
