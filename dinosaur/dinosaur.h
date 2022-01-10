@@ -7,7 +7,7 @@
 #define ldrPin A2
 
 int ambientLight = 0;
-int distance;
-const int presetDistance = 15;
+int distance = 0;
+const int presetDistance = 15;  // cm
 int wheelPos = 90;
 int wheelPos_2 = 90;
