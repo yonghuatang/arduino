@@ -6,7 +6,6 @@
 #define buzzerPin 5
 #define ldrPin A2
 
-int ldrValue;
 int ambientLight = 0;
 int distance;
 const int presetDistance = 15;

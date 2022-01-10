@@ -16,7 +16,7 @@ Servo wheelServo, wheelServo_2, jawServo, handServo, legServo;
 void setup() {
     ambientLight = 0;
     Serial.begin(9600);
-    while (!Serial) {delay(100);}
+    delay(500);
     pinMode(ledPin, OUTPUT);
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);

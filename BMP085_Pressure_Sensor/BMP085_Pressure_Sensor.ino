@@ -49,28 +49,28 @@ void displaySensorDetails() {
 
 void setup() {
     Serial.begin(9600);
-    Serial.println("Pressure Sensor Test"); Serial.println();
+    delay(500);
+    Serial.println("=== BMP085 Pressure Sensor Test ==="); Serial.println();
 
-    /* Initialise the sensor */
+    // Initialise the sensor
     if (!bmp.begin()) {
-        /* There was a problem detecting the BMP085 ... check your connections */
         Serial.print("No BMP085 detected... Check your wiring or I2C ADDR");
-        while(1);
+        while (true) {;}
     }
-
-    /* Display some basic information on this sensor */
+    
+    // Display some basic information on this sensor
     displaySensorDetails();
 }
 
 
 void loop() {
-    /* Get a new sensor event */
+    // Get a new sensor event
     sensors_event_t event;
     bmp.getEvent(&event);
 
-    /* Display the results (barometric pressure is measure in hPa) */
+    // Display the results (barometric pressure is measure in hPa)
     if (event.pressure) {
-        /* Display atmospheric pressue in hPa */
+        // Display atmospheric pressue in hPa
         Serial.print("Pressure: ");
         Serial.print(event.pressure);
         Serial.println(" hPa");
@@ -99,7 +99,7 @@ void loop() {
 
         /* Then convert the atmospheric pressure, SLP and temp to altitude */
         /* Update this next line with the current SLP for better results */
-        //float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;  // SENSORS_PRESSURE_SEALEVELHPA defined as 1013.25 hPa
+        // float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;  // SENSORS_PRESSURE_SEALEVELHPA defined as 1013.25 hPa
         float seaLevelPressure = 880;  // hPa
         Serial.print("Altitude: ");
         Serial.print(bmp.pressureToAltitude(seaLevelPressure, event.pressure, temperature));
