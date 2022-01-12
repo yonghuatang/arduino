@@ -1,8 +1,8 @@
 /*
 University of Southampton Malaysia - FEEG2001 Systems Design and Computing
 Semester 1 Summative Design Assessment - The Arduino Dinosaur
-Arduino Sketch v1.0.0 - Group 14
-Last modified: 10 January 2022 (Monday)
+Arduino Sketch v1.1.0 - Group 14
+Last modified: 12 January 2022 (Wednesday)
 Forked from https://github.com/kaizer222/dino_design_2021
 */
 
@@ -14,14 +14,17 @@ Servo wheelServo, wheelServo_2, jawServo, handServo, legServo;
 
 
 void setup() {
-    ambientLight = 0;
     Serial.begin(9600);
     delay(500);
+
+    // pinMode
     pinMode(ledPin, OUTPUT);
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
     pinMode(buzzerPin, OUTPUT);
     pinMode(ldrPin, INPUT);
+
+    // Servos
     wheelServo.attach(9);
     wheelServo_2.attach(8);
     jawServo.attach(10);
@@ -46,11 +49,9 @@ void loop() {
     if (distance <= 30 && distance != 0) {
         keepDistance(wheelServo, wheelServo_2, wheelPos, wheelPos_2, 15);
     } else if (distance > 200 && wheelServo.read() >= 180) {
-          resetWheel(wheelServo,wheelServo_2);
+          resetWheel(wheelServo, wheelServo_2);
     }
     ldr(30);
-    Serial.print("LDR Value: ");
-    Serial.println(analogRead(ldrPin));  // print LDR value for easier debugging
 }
 
 
@@ -86,7 +87,7 @@ void calcDistance() {
 
 // Light up eye LED if distance <= presetDistance
 void distanceLed() {
-    digitalWrite(ledPin, distance <= presetDistance ? HIGH : LOW);
+    digitalWrite(ledPin, (distance <= presetDistance ? HIGH : LOW));
 }
 
 
@@ -98,8 +99,12 @@ void buzz(int freq, int dur) {
 
 // Detect if object (hand) is present in mouth
 void ldr(int threshold) {
-    if (analogRead(ldrPin) < ambientLight-threshold) {
-        Serial.println("HAND DETECTED");
+    int val = analogRead(ldrPin);
+    Serial.print("LDR Value: ");
+    Serial.println(val);  // print LDR value for easier debugging
+    
+    if (val < ambientLight-threshold) {
+        Serial.println("HAND DETECTED!");
         bite(legServo, 60, "LEG");
         bite(handServo, 60, "JAW");
         bite(jawServo, 60, "HAND");
