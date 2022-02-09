@@ -19,10 +19,10 @@ void setup() {
         delay(500);
     }
 
-    // If you want, you can set accelerometer offsets
-    // mpu.setAccelOffsetX();
-    // mpu.setAccelOffsetY();
-    // mpu.setAccelOffsetZ();
+// If you want, you can set accelerometer offsets
+     mpu.setAccelOffsetX(-2250);
+     mpu.setAccelOffsetY(1930);
+     mpu.setAccelOffsetZ(1550);
   
     checkSettings();
 }
@@ -79,5 +79,5 @@ void loop() {
     Serial.print(" Znorm = ");
     Serial.println(normAccel.ZAxis);
   
-    delay(2000);
+    delay(500);
 }

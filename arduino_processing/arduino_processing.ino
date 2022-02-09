@@ -5,7 +5,8 @@ void setup() {
 }
 
 void loop() {
-    static int i = 0;
-    Serial.println(i++);
-    delay(1000);
+//    static int i = 0;
+//    Serial.println(i++);
+    Serial.println(millis());
+    delay(200);
 }
