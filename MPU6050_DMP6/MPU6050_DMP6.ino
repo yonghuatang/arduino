@@ -153,7 +153,6 @@ void dmpDataReady() {
     mpuInterrupt = true;
 }
 
-
 // ================================================================
 // ===                      INITIAL SETUP                       ===
 // ================================================================
@@ -365,6 +364,5 @@ void loop() {
         // Blink LED to indicate activity
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
-        delay(100);
     }
 }
